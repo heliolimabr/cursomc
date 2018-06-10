@@ -3,9 +3,11 @@ package com.heliolima.cursomc.services;
 
 import com.heliolima.cursomc.domain.Categoria;
 import com.heliolima.cursomc.repositories.CategoriaRepository;
+import com.heliolima.cursomc.services.exceptions.DataIntegrityException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,6 +38,17 @@ public class CategoriaService {
     {
         find(obj.getId());
         return repo.save(obj);
+    }
+    
+    public void delete(Integer id)
+    {
+        find(id);
+        try {
+            repo.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Não é possível excluir uma categoria que possui produtos.");
+        }
+        
     }
     
 }
