@@ -1,6 +1,7 @@
 
 package com.heliolima.cursomc.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.heliolima.cursomc.domain.enums.EstadoPagamento;
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public abstract class Pagamento implements Serializable {
     
     private Integer estado;
     
+    @JsonIgnore
     //(dessa forma o id do pagamento será o mesmo id de pedido não precisando do @GeneratedValue
     @OneToOne
     @JoinColumn(name = "pedito_id")

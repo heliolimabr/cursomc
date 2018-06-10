@@ -1,6 +1,7 @@
 
 package com.heliolima.cursomc.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ public class Pedido implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private Date instante;
     
     //foi mapeado na classe Pagamento (dessa forma o id do pagamento será o mesmo id de pedido)
