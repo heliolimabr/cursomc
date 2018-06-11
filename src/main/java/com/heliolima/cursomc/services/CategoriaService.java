@@ -2,6 +2,7 @@
 package com.heliolima.cursomc.services;
 
 import com.heliolima.cursomc.domain.Categoria;
+import com.heliolima.cursomc.dto.CategoriaDTO;
 import com.heliolima.cursomc.repositories.CategoriaRepository;
 import com.heliolima.cursomc.services.exceptions.DataIntegrityException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
@@ -66,4 +67,7 @@ public class CategoriaService {
         return repo.findAll(pageRequest);
     }
     
+    public Categoria fromDTO(CategoriaDTO objDto){
+        return new Categoria(objDto.getId(), objDto.getNome());
+    }
 }
