@@ -1,24 +1,42 @@
 package com.heliolima.cursomc.dto;
 
+import com.heliolima.cursomc.services.validation.ClienteInsert;
 import java.io.Serializable;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
  * @author Helio
  */
+@ClienteInsert
 public class ClienteNewDTO implements Serializable{
     
+    @NotEmpty(message = "Preenchimento Obrigatório")
+    @Length(min = 5, max = 80, message = "O tamanho deve ser entre 5 e 80 caracteres.")
     private String nome;
+    
+    @NotEmpty(message = "Preenchimento Obrigatório")
+    @Email(message = "E-mail inválido")
     private String email;
+    
+    @NotEmpty(message = "Preenchimento Obrigatório")
     private String cpfOuCnpj;
     private Integer tipo;
     
+    @NotEmpty(message = "Preenchimento Obrigatório")
     private String logradouro;
+    
+    @NotEmpty(message = "Preenchimento Obrigatório")
     private String numero;
     private String complemento;
     private String bairro;
+    
+    @NotEmpty(message = "Preenchimento Obrigatório")
     private String cep;
     
+    @NotEmpty(message = "Preenchimento Obrigatório")
     private String telefone;
     private String telefone2;
     private String telefone3;
