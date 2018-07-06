@@ -2,6 +2,7 @@
 package com.heliolima.cursomc.dto;
 
 import com.heliolima.cursomc.domain.Cliente;
+import com.heliolima.cursomc.services.validation.ClienteUpdate;
 import java.io.Serializable;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -11,6 +12,7 @@ import org.hibernate.validator.constraints.Length;
  *
  * @author Helio Lima
  */
+@ClienteUpdate
 public class ClienteDTO implements Serializable {
     
     private Integer id;
