@@ -1,6 +1,7 @@
 
 package com.heliolima.cursomc.domain;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.heliolima.cursomc.domain.enums.EstadoPagamento;
 import javax.persistence.Entity;
 
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
  * @author Helio Lima
  */
 @Entity
+@JsonTypeName("pagamentoComCartao")
 public class PagamentoComCartao extends Pagamento {
 
     private Integer numeroDeParcelas;
