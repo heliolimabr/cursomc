@@ -1,6 +1,8 @@
 package com.heliolima.cursomc.config;
 
 import com.heliolima.cursomc.services.DBService;
+import com.heliolima.cursomc.services.EmailService;
+import com.heliolima.cursomc.services.MockEmailService;
 import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -22,6 +24,11 @@ public class TestConfig {
     public boolean instatiateDatabase() throws ParseException{
         dbService.instatiateTestDatabase();
         return true;
+    }
+    
+    @Bean
+    public EmailService emailService(){
+        return new MockEmailService();
     }
     
 }
