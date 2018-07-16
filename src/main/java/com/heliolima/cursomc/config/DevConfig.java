@@ -1,6 +1,8 @@
 package com.heliolima.cursomc.config;
 
 import com.heliolima.cursomc.services.DBService;
+import com.heliolima.cursomc.services.EmailService;
+import com.heliolima.cursomc.services.SmtpEmailService;
 import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +31,11 @@ public class DevConfig {
         
         dbService.instatiateTestDatabase();
         return true;
+    }
+    
+    @Bean
+    public EmailService emailService(){
+        return new SmtpEmailService();
     }
     
 }
