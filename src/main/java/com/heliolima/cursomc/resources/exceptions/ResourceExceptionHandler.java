@@ -1,6 +1,7 @@
 
 package com.heliolima.cursomc.resources.exceptions;
 
+import com.heliolima.cursomc.services.exceptions.AuthorizationException;
 import com.heliolima.cursomc.services.exceptions.DataIntegrityException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,4 +45,10 @@ public class ResourceExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
     
+    @ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest request){
+        StandardError standardError = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+        
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(standardError);
+    }
 }

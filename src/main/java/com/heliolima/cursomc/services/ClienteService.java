@@ -5,12 +5,15 @@ import com.heliolima.cursomc.domain.Cidade;
 import com.heliolima.cursomc.domain.Cliente;
 import com.heliolima.cursomc.domain.Cliente;
 import com.heliolima.cursomc.domain.Endereco;
+import com.heliolima.cursomc.domain.enums.Perfil;
 import com.heliolima.cursomc.domain.enums.TipoCliente;
 import com.heliolima.cursomc.dto.ClienteDTO;
 import com.heliolima.cursomc.dto.ClienteNewDTO;
 import com.heliolima.cursomc.repositories.CidadeRepository;
 import com.heliolima.cursomc.repositories.ClienteRepository;
 import com.heliolima.cursomc.repositories.EnderecoRepository;
+import com.heliolima.cursomc.security.UserSS;
+import com.heliolima.cursomc.services.exceptions.AuthorizationException;
 import com.heliolima.cursomc.services.exceptions.DataIntegrityException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
 import java.util.List;
@@ -41,6 +44,13 @@ public class ClienteService {
     private BCryptPasswordEncoder pe;
     
     public Cliente find(Integer id){
+        
+        UserSS user = UserService.authenticated();
+        if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId()))
+        {
+            throw new AuthorizationException("Acesso negado");
+        }
+        
         Optional<Cliente> obj = repo.findById(id);
         
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não "
