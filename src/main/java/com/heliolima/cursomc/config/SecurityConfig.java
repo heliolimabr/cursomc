@@ -1,6 +1,7 @@
 package com.heliolima.cursomc.config;
 
 import com.heliolima.cursomc.security.JWTAuthenticationFilter;
+import com.heliolima.cursomc.security.JWTAuthorizationFilter;
 import com.heliolima.cursomc.security.JWTUtil;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers(PUBLIC_MATCHES).permitAll()
                 .anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
     
