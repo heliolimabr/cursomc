@@ -2,6 +2,8 @@
 package com.heliolima.cursomc.services;
 
 
+import com.heliolima.cursomc.domain.Categoria;
+import com.heliolima.cursomc.domain.Cliente;
 import com.heliolima.cursomc.domain.ItemPedido;
 import com.heliolima.cursomc.domain.PagamentoComBoleto;
 import com.heliolima.cursomc.domain.Pedido;
@@ -9,10 +11,15 @@ import com.heliolima.cursomc.domain.enums.EstadoPagamento;
 import com.heliolima.cursomc.repositories.ItemPedidoRepository;
 import com.heliolima.cursomc.repositories.PagamentoRepository;
 import com.heliolima.cursomc.repositories.PedidoRepository;
+import com.heliolima.cursomc.security.UserSS;
+import com.heliolima.cursomc.services.exceptions.AuthorizationException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
 import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,5 +83,16 @@ public class PedidoService {
         itemPedidoRepository.saveAll(obj.getItens());
         emailService.sendOrderConfirmationHtmlEmail(obj);
         return obj;
+    }
+    
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction)
+    {
+        UserSS user = UserService.authenticated();
+        if(user == null)
+            throw new AuthorizationException("Acesso negado");
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        Cliente cliente = clienteService.find(user.getId());
+        
+        return repo.findByCliente(cliente, pageRequest);
     }
 }
