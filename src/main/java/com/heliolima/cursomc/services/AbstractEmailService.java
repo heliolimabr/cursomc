@@ -1,5 +1,6 @@
 package com.heliolima.cursomc.services;
 
+import com.heliolima.cursomc.domain.Cliente;
 import com.heliolima.cursomc.domain.Pedido;
 import java.util.Date;
 import java.util.logging.Level;
@@ -51,6 +52,13 @@ public abstract class AbstractEmailService implements EmailService{
         return templateEngine.process("email/confirmacaoPedido", context);
     }
     
+    protected String htmlFromTemplateNewPassword(Cliente cliente, String newPass){
+        Context context = new Context();
+        context.setVariable("cliente", cliente);
+        context.setVariable("senha", newPass);
+        return templateEngine.process("email/novaSenha", context);
+    }
+    
     @Override
     public void sendOrderConfirmationHtmlEmail(Pedido obj){
         try
@@ -75,4 +83,46 @@ public abstract class AbstractEmailService implements EmailService{
         return mimeMessage;
     }
     
+    @Override
+    public void sendNewPasswordEmail(Cliente cliente, String newPass)
+    {
+        SimpleMailMessage sm = prepareNewPasswordEmail(cliente, newPass);
+        sendEmail(sm);
+    }
+    
+    @Override
+    public void sendNewPasswordEmailHtml(Cliente cliente, String newPass)
+    {
+        try
+        {
+            MimeMessage mm = prepareMimeMessageNewPasswordEmail(cliente, newPass);
+            sendHtmlEmail(mm);
+        } catch (MessagingException ex)
+        {
+            sendNewPasswordEmail(cliente, newPass);
+        }
+    }
+
+    protected SimpleMailMessage prepareNewPasswordEmail(Cliente cliente, String newPass)
+    {
+        SimpleMailMessage sm = new SimpleMailMessage();
+        sm.setTo(cliente.getEmail());
+        sm.setFrom(sender);
+        sm.setSubject("Solicitação de Nova Senha");
+        sm.setSentDate(new Date(System.currentTimeMillis()));
+        sm.setText("Nova senha: " + newPass);
+        return sm;
+    }
+
+    private MimeMessage prepareMimeMessageNewPasswordEmail(Cliente cliente, String newPass) throws MessagingException
+    {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mmh = new MimeMessageHelper(mimeMessage, true);
+        mmh.setTo(cliente.getEmail());
+        mmh.setFrom(sender);
+        mmh.setSubject("Solicitação de Nova Senha");
+        mmh.setSentDate(new Date(System.currentTimeMillis()));
+        mmh.setText(htmlFromTemplateNewPassword(cliente, newPass), true);
+        return mimeMessage;
+    }
 }
