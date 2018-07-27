@@ -14,9 +14,11 @@ import com.heliolima.cursomc.repositories.PedidoRepository;
 import com.heliolima.cursomc.security.UserSS;
 import com.heliolima.cursomc.services.exceptions.AuthorizationException;
 import com.heliolima.cursomc.services.exceptions.ObjectNotFoundException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -51,6 +53,9 @@ public class PedidoService {
     @Autowired
     private EmailService emailService;
     
+    @Autowired
+    private Environment env;
+    
     public Pedido find(Integer id){
         Optional<Pedido> obj = repo.findById(id);
         return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não "
@@ -81,7 +86,10 @@ public class PedidoService {
         }
         
         itemPedidoRepository.saveAll(obj.getItens());
-        emailService.sendOrderConfirmationHtmlEmail(obj);
+        if(Arrays.asList(env.getActiveProfiles()).contains("test"))
+            emailService.sendOrderConfirmationEmail(obj);
+        else
+            emailService.sendOrderConfirmationHtmlEmail(obj);
         return obj;
     }
     
