@@ -2,6 +2,7 @@ package com.heliolima.cursomc.services;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.heliolima.cursomc.services.exceptions.FileException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -37,13 +38,13 @@ public class S3Service {
             String contentType = multipartFile.getContentType();
             return uploadFile(is, filename, contentType);
         } catch (IOException ex) {
-            throw new RuntimeException("Erro de IO: " + ex.getMessage());
+            throw new FileException("Erro de IO: " + ex.getMessage());
         } finally {
             try {
                 if (is != null)
                     is.close();
             } catch (IOException ex) {
-                throw new RuntimeException("Erro de IO: " + ex.getMessage());
+                throw new FileException("Erro de IO: " + ex.getMessage());
             }
         }
 
@@ -59,7 +60,7 @@ public class S3Service {
             LOG.info("Upload finalizado");
             return s3client.getUrl(bucketName, fileName).toURI();
         } catch (URISyntaxException ex) {
-            throw new RuntimeException("Erro ao converter URL para URI");
+            throw new FileException("Erro ao converter URL para URI");
         }
     }
 
