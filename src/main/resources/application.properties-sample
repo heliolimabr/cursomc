@@ -1,8 +1,8 @@
 spring.profiles.active = test
 server.port=8090
 
-default.sender=helio.augustolima@gmail.com
-default.recipient=helio.augustolima@gmail.com
+default.sender=sample@gmail.com
+default.recipient=sample@gmail.com
 
 jwt.secret=SequenciaDeCaracteresParaAssinarToken
 jwt.expiration=86400000
